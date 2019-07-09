@@ -1,0 +1,1 @@
+{"version":2,"name":"sync-battle","builds":[{"src":"package.json","use":"@now/next"}]}
