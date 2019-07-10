@@ -1,1 +1,9 @@
-{"version":2,"name":"sync-battle","builds":[{"src":"package.json","use":"@now/next"}]}
+{
+  "version": 2,
+  "name": "sync-battle",
+  "builds": [
+    { "src": "package.json", "use": "@now/next" },
+    { "src": "server/index.js", "use": "@now/node" }
+  ],
+  "routes": [{ "src": "/graphql.*", "dest": "server/index.js" }]
+}
