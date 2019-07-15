@@ -6,7 +6,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    saveName(name: String): String
+    login(userName: String, password: String): String
   }
 `;
 
@@ -17,8 +17,8 @@ const resolvers = {
     }
   },
   Mutation: {
-    saveName: (root, args, context) => {
-      return `Hello ${args.name}! Your name has been saved!`;
+    login: (root, { userName }, context) => {
+      return `Hello ${userName}! Welcome back!`;
     }
   }
 };

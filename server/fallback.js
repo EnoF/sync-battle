@@ -3,7 +3,8 @@ import ApolloClient, { gql } from 'apollo-boost'
 
 const { createHttpLink } = require('apollo-link-http')
 
-const redirectWith = res => url => {
+const redirectWith = res => (error, url) => {
+  if (!!error) console.error(error)
   res.writeHead(302, {
     Location: url,
   })
@@ -11,12 +12,12 @@ const redirectWith = res => url => {
 }
 
 export default (req, res) => {
-  const { headers, body } = req
+  const { headers, body = {} } = req
   const uri = `${headers['x-forwarded-proto']}://${headers['x-forwarded-host']}`
   const redirectTo = redirectWith(res)
 
   const { mutation, ...variables } = body
-  if (!mutation) return redirectTo(`${uri}/`)
+  if (!mutation) return redirectTo(new Error('No mutation provided'), `${uri}/`)
 
   const MUTATION = gql(mutation)
   const client = new ApolloClient({
@@ -24,9 +25,11 @@ export default (req, res) => {
     uri: `${uri}/graphql`,
     fetch,
   })
-  client.mutate({
-    mutation: MUTATION,
-    variables,
-  })
-  redirectTo(`${uri}/`)
+  client
+    .mutate({
+      mutation: MUTATION,
+      variables,
+    })
+    .then(() => redirectTo(null, `${uri}/`))
+    .catch(error => redirectTo(error, `${uri}/`))
 }

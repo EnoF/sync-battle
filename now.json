@@ -4,7 +4,7 @@
   "builds": [
     { "src": "package.json", "use": "@now/next" },
     { "src": "server/index.js", "use": "@now/node" },
-    { "src": "server/fallback.js", "use": "@now/node" }
+    { "src": "server/fallback.js", "use": "@now/node@canary" }
   ],
   "routes": [
     { "src": "/graphql.*", "dest": "server/index.js" },
