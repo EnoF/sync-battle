@@ -1,16 +1,16 @@
-import Head from "next/head";
-import Link from "next/link";
-import material from "materialize-css/sass/materialize.scss";
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import Header from "../components/header";
-import withData from "../lib/apollo";
+import Head from 'next/head'
+import Link from 'next/link'
+import material from 'materialize-css/sass/materialize.scss'
+import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
+import Header from '../components/header'
+import withData from '../lib/apollo'
 
 export const helloWorld = gql`
   {
     hello
   }
-`;
+`
 
 function Index() {
   return (
@@ -27,7 +27,7 @@ function Index() {
           <Header />
           <section className="content">
             <Link href="/about">
-              <a>{ hello }</a>
+              <a>{hello}</a>
             </Link>
           </section>
           <style jsx>{`
@@ -38,7 +38,7 @@ function Index() {
         </main>
       )}
     </Query>
-  );
+  )
 }
 
-export default withData(Index);
+export default withData(Index)
