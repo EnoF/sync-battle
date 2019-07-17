@@ -1,7 +1,6 @@
 import fetch from 'node-fetch'
 import ApolloClient, { gql } from 'apollo-boost'
-
-const { createHttpLink } = require('apollo-link-http')
+import Mutation from '../lib/mutations'
 
 const redirectWith = res => (error, url) => {
   if (!!error) console.error(error)
@@ -23,6 +22,7 @@ export default (req, res) => {
   const client = new ApolloClient({
     credentials: 'same-origin',
     uri: `${uri}/graphql`,
+    Mutation,
     fetch,
   })
   client

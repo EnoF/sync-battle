@@ -1,60 +1,62 @@
-import { Mutation } from 'react-apollo'
+import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
-import Header from '../components/header'
 import withData from '../lib/apollo'
+import Header from '../components/header'
+import Form from '../components/form'
 
 export const LOGIN = gql`
   mutation Login($userName: String, $password: String) {
     login(userName: $userName, password: $password)
+    setUserName(userName: $userName) @client
   }
 `
-const Login = props => (
-  <Mutation mutation={LOGIN}>
-    {(login, { data, error, loading }) => (
+
+export const USER_NAME = gql`{ userName @client }`
+
+const Login = () => (
+  <Query query={USER_NAME}>
+    {({ data }) => (
       <main>
         <Header />
-        {!!data && (
+        {!!data.userName && (
           <section>
-            <h1>{data.login}</h1>
+            <h1>{data.userName}</h1>
           </section>
         )}
-        {!data && (
+        {!data.userName && (
           <section>
             <h1>Login</h1>
-            {!!loading && <div>Logging in...</div>}
-            <form
-              action="/fallback/"
-              method="POST"
-              onSubmit={event => {
-                const data = new FormData(event.target)
-                const variables = {}
-                for (let [key, value] of data.entries()) {
-                  variables[key] = value
-                }
-                login({ variables })
-                event.preventDefault()
-              }}
+            <Form
+              action="/"
+              mutation={LOGIN}
             >
-              <input
-                type="hidden"
-                name="mutation"
-                value={LOGIN.loc.source.body}
-              />
-              <label>
-                user:
-                <input type="text" name="userName" disabled={loading} />
-              </label>
-              <label>
-                password:
-                <input type="password" name="password" disabled={loading} />
-              </label>
-              <button type="submit" disabled={loading}>login</button>
-            </form>
+              {({ loading }) => (
+                <>
+                  {!!loading && <div>Logging in...</div>}
+                  <input
+                    type="hidden"
+                    name="mutation"
+                    value={LOGIN.loc.source.body}
+                  />
+                  <label>
+                    user:
+                    <input type="text" name="userName" disabled={loading} />
+                  </label>
+                  <label>
+                    password:
+                    <input type="password" name="password" disabled={loading} />
+                  </label>
+                  <button type="submit" disabled={loading}>
+                    login
+                  </button>
+                </>
+              )}
+            </Form>
           </section>
         )}
       </main>
     )}
-  </Mutation>
+  </Query>
 )
 
 export default withData(Login)

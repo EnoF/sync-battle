@@ -8,14 +8,14 @@ import withData from '../lib/apollo'
 
 export const helloWorld = gql`
   {
-    hello
+    userName @client
   }
 `
 
 function Index() {
   return (
     <Query query={helloWorld}>
-      {({ loading, error, data: { hello }, fetchMore }) => (
+      {({ loading, error, data: { userName }, fetchMore }) => (
         <main>
           <Head>
             <title>Sync Battle</title>
@@ -27,7 +27,7 @@ function Index() {
           <Header />
           <section className="content">
             <Link href="/about">
-              <a>{hello}</a>
+              <a>{userName}</a>
             </Link>
           </section>
           <style jsx>{`
