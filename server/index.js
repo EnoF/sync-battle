@@ -27,7 +27,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: true,
-  playground: true
-});
+  playground: true,
+  // This is the apollo server
+  ssrMode: true,
+})
 
-module.exports = server.createHandler();
+module.exports = server.createHandler()

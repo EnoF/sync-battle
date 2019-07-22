@@ -9,8 +9,8 @@
   "routes": [
     { "src": "/graphql.*", "dest": "server/index.js" },
     {
-      "src": "/fallback/.*",
-      "dest": "server/fallback.js"
+      "src": "/fallback/(.*)",
+      "dest": "server/fallback.js?fallbackUrl=$1"
     }
   ]
 }

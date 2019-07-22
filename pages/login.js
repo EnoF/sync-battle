@@ -33,11 +33,6 @@ const Login = () => (
               {({ loading }) => (
                 <>
                   {!!loading && <div>Logging in...</div>}
-                  <input
-                    type="hidden"
-                    name="mutation"
-                    value={LOGIN.loc.source.body}
-                  />
                   <label>
                     user:
                     <input type="text" name="userName" disabled={loading} />

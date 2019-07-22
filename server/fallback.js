@@ -1,3 +1,4 @@
+import { parse } from 'url'
 import fetch from 'node-fetch'
 import ApolloClient, { gql } from 'apollo-boost'
 import Mutation from '../lib/mutations'
@@ -12,6 +13,8 @@ const redirectWith = res => (error, url) => {
 
 export default (req, res) => {
   const { headers, body = {} } = req
+  const { query } = parse(req.url, true)
+  const { fallbackUrl } = query
   const uri = `${headers['x-forwarded-proto']}://${headers['x-forwarded-host']}`
   const redirectTo = redirectWith(res)
 
@@ -22,7 +25,9 @@ export default (req, res) => {
   const client = new ApolloClient({
     credentials: 'same-origin',
     uri: `${uri}/graphql`,
-    Mutation,
+    resolvers: {
+      Mutation,
+    },
     fetch,
   })
   client
@@ -30,6 +35,6 @@ export default (req, res) => {
       mutation: MUTATION,
       variables,
     })
-    .then(() => redirectTo(null, `${uri}/`))
+    .then(() => redirectTo(null, `${uri}${fallbackUrl}`))
     .catch(error => redirectTo(error, `${uri}/`))
 }
