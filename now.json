@@ -11,5 +11,8 @@
       "src": "/fallback/(.*)",
       "dest": "server/babel-fallback.js?fallbackUrl=$1"
     }
-  ]
+  ],
+  "env": {
+    "MONGODB_URL": "@mongodb_url"
+  }
 }

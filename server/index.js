@@ -1,6 +1,7 @@
 const { round } = require('../game/battle-round')
 
 const { ApolloServer, gql } = require('apollo-server-micro')
+const db = require('./mongo')
 
 const typeDefs = gql`
   type Move {
