@@ -6,10 +6,10 @@ require('approvals').mocha('./approvals')
 
 describe('Calculations', () => {
   getPermutations({
-    p1Hp: [10],
+    p1Hp: [10, 9],
     p1Move: ['attack'],
     p1Stamina: [5],
-    p2Hp: [10],
+    p2Hp: [10, 9],
     p2Move: ['attack'],
     p2Stamina: [5],
   }).forEach(({ p1Hp, p1Move, p1Stamina, p2Hp, p2Move, p2Stamina }) => {
