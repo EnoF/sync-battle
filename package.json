@@ -3,7 +3,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next",
-    "now-build": "next build"
+    "now-build": "next build",
+    "test": "mocha game/**/*.specs.js"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
@@ -19,8 +20,11 @@
     "react-dom": "^16.7.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/register": "^7.7.4",
     "approvals": "^3.0.5",
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "prettier": "^1.19.1"
   }
 }
