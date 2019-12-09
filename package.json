@@ -4,7 +4,7 @@
     "build": "next build",
     "dev": "next",
     "now-build": "next build",
-    "test": "mocha game/**/*.specs.js"
+    "test": "mocha -r @babel/register game/**/*.specs.js"
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
