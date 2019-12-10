@@ -1,9 +1,13 @@
 const getHp = player => player.hp
 const getStamina = player => () => player.stamina
 const getMove = player => () => player.move
-const getApplicableMove = (getMove, getStamina) => {
-  if (getStamina() <= 0) return () => 'idle'
-  return () => getMove()
+const getApplicableMove = (getMove, getMoveOpponent, getStamina) => () => {
+  const move = getMove()
+  const stamina = getStamina()
+  if (getMoveOpponent() === 'attack' && move === 'block' && stamina <= 1)
+    return 'idle'
+  if (stamina <= 0) return 'idle'
+  return move
 }
 const getDamage = (getMoveAttacker, getMoveDefender) => {
   if (getMoveAttacker() !== 'attack') return 0
@@ -27,8 +31,8 @@ const getStaminaAfterConsumption = (getStamina, getStaminaConsumption) => {
   return result
 }
 export const calculate = ({ p1, p2 }) => {
-  const getP1Move = getApplicableMove(getMove(p1), getStamina(p1))
-  const getP2Move = getApplicableMove(getMove(p2), getStamina(p2))
+  const getP1Move = getApplicableMove(getMove(p1), getMove(p2), getStamina(p1))
+  const getP2Move = getApplicableMove(getMove(p2), getMove(p1), getStamina(p2))
   return {
     p1: {
       hp: getHp(p1) - getDamage(getP2Move, getP1Move),
