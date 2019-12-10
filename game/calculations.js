@@ -4,6 +4,7 @@ const getMove = player => () => player.move
 const getDamage = (getMoveAttacker, getMoveDefender) => {
   if (getMoveAttacker() !== 'attack') return 0
   if (getMoveDefender() === 'block') return 0
+  if (getMoveDefender() === 'dodge') return 0
   return 1
 }
 const isAttackBlocked = (getMoveAttack, getMoveBlock) => {
