@@ -11,7 +11,7 @@ describe('Calculations', () => {
     p1Stamina: [5],
     p2Hp: [10],
     p2Move: ['attack', 'block', 'dodge'],
-    p2Stamina: [5],
+    p2Stamina: [5, 0],
   }).forEach(({ p1Hp, p1Move, p1Stamina, p2Hp, p2Move, p2Stamina }) => {
     describe(`when player one uses ${p1Move}`, () => {
       describe(`and has ${p1Hp}hp with ${p1Stamina}stamina`, () => {
