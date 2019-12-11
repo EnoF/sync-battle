@@ -7,15 +7,15 @@ require('approvals').mocha('./approvals')
 describe('Calculations', () => {
   getPermutations({
     p1Hp: [10],
-    p1Move: ['attack'],
+    p1Move: [{ type: 'attack' }],
     p1Stamina: [5],
     p2Hp: [10],
-    p2Move: ['attack', 'block', 'dodge'],
+    p2Move: [{ type: 'attack' }, { type: 'block' }, { type: 'dodge' }],
     p2Stamina: [5, 1, 0],
   }).forEach(({ p1Hp, p1Move, p1Stamina, p2Hp, p2Move, p2Stamina }) => {
-    describe(`when player one uses ${p1Move}`, () => {
+    describe(`when player one uses ${p1Move.type}`, () => {
       describe(`and has ${p1Hp}hp with ${p1Stamina}stamina`, () => {
-        describe(`and player two uses ${p2Move}`, () => {
+        describe(`and player two uses ${p2Move.type}`, () => {
           describe(`and has ${p2Hp}hp with ${p2Stamina}stamina`, () => {
             it(`should reduce player two's hp`, function() {
               this.verifyAsJSON(

@@ -1,6 +1,6 @@
 const getHp = player => () => player.hp
 const getStamina = player => () => player.stamina
-const getMove = player => () => player.move
+const getMove = player => () => player.move.type
 const isAttack = getMove => getMove() === 'attack'
 const isBlock = getMove => getMove() === 'block'
 const isDodge = getMove => getMove() === 'dodge'
