@@ -1,8 +1,10 @@
 import 'mocha'
 import { getPermutations } from './permutations'
 import { calculate } from './calculations'
-
-require('approvals').mocha('./approvals')
+import approvals from 'approvals'
+approvals.configure({
+  forceApproveAll: !!process.env.FORCE_APPROVE,
+})
 
 describe('Calculations', () => {
   getPermutations({
@@ -12,13 +14,21 @@ describe('Calculations', () => {
     p2Hp: [10],
     p2Move: [{ type: 'attack' }, { type: 'block' }, { type: 'dodge' }],
     p2Stamina: [5, 1, 0],
-  }).forEach(({ p1Hp, p1Move, p1Stamina, p2Hp, p2Move, p2Stamina }) => {
+  }).forEach(({ p1Move, p2Move, ...permutation }) => {
+    const { p1Hp, p1Stamina, p2Hp, p2Stamina } = permutation
     describe(`when player one uses ${p1Move.type}`, () => {
       describe(`and has ${p1Hp}hp with ${p1Stamina}stamina`, () => {
-        describe(`and player two uses ${p2Move.type}`, () => {
+        describe(`and player two uses ${p2Move.type} with ${p2Move.power} power`, () => {
           describe(`and has ${p2Hp}hp with ${p2Stamina}stamina`, () => {
             it(`should reduce player two's hp`, function() {
-              this.verifyAsJSON(
+              approvals.verifyAsJSON(
+                __dirname + '/../approvals',
+                [
+                  'calculations-',
+                  ...Object.values(permutation),
+                  ...Object.values(p1Move),
+                  ...Object.values(p2Move),
+                ].join('-'),
                 calculate({
                   p1: {
                     hp: p1Hp,
