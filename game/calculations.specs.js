@@ -12,12 +12,7 @@ describe('Calculations', () => {
     p1Move: [{ type: 'attack' }],
     p1Stamina: [5],
     p2Hp: [10],
-    p2Move: [
-      { type: 'attack' },
-      { type: 'attack', power: 3 },
-      { type: 'block' },
-      { type: 'dodge' },
-    ],
+    p2Move: [{ type: 'attack' }, { type: 'attack', power: 3 }, { type: 'block' }, { type: 'dodge' }],
     p2Stamina: [5, 1, 0],
   }).forEach(({ p1Move, p2Move, ...permutation }) => {
     const { p1Hp, p1Stamina, p2Hp, p2Stamina } = permutation
