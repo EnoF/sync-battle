@@ -52,18 +52,21 @@ const getStaminaAfterConsumption = (player, opponent) => {
   if (getStaminaOfPlayer() < getPlayerStaminaConsumption()) return getStaminaOfPlayer()
   return subTractToMinimumOfZero(getStaminaOfPlayer, getPlayerStaminaConsumption)
 }
-const getHpAfterDamage = (getHp, getDamage) => subTractToMinimumOfZero(getHp, getDamage)
-export const calculate = ({ p1, p2 }) => {
-  const getP1Move = getApplicableMove(p1, p2)
-  const getP2Move = getApplicableMove(p2, p1)
-  return {
-    p1: {
-      hp: getHpAfterDamage(getHp(p1), getPoweredDamage(getDamage(getP2Move, getP1Move), getPower(p2))),
-      stamina: getStaminaAfterConsumption(p1, p2),
-    },
-    p2: {
-      hp: getHpAfterDamage(getHp(p2), getPoweredDamage(getDamage(getP1Move, getP2Move), getPower(p1))),
-      stamina: getStaminaAfterConsumption(p2, p1),
-    },
-  }
+const getHpAfterDamage = (defender, attacker) => {
+  const getMoveDefender = getApplicableMove(defender, attacker)
+  const getMoveAttacker = getApplicableMove(attacker, defender)
+  return subTractToMinimumOfZero(
+    getHp(defender),
+    getPoweredDamage(getDamage(getMoveAttacker, getMoveDefender), getPower(attacker))
+  )
 }
+export const calculate = ({ p1, p2 }) => ({
+  p1: {
+    hp: getHpAfterDamage(p1, p2),
+    stamina: getStaminaAfterConsumption(p1, p2),
+  },
+  p2: {
+    hp: getHpAfterDamage(p2, p1),
+    stamina: getStaminaAfterConsumption(p2, p1),
+  },
+})
