@@ -60,13 +60,11 @@ const getHpAfterDamage = (defender, attacker) => {
     getPoweredDamage(getDamage(getMoveAttacker, getMoveDefender), getPower(attacker))
   )
 }
+const getPlayerStatsAfterMoves = (player, opponent) => ({
+  hp: getHpAfterDamage(player, opponent),
+  stamina: getStaminaAfterConsumption(player, opponent),
+})
 export const calculate = ({ p1, p2 }) => ({
-  p1: {
-    hp: getHpAfterDamage(p1, p2),
-    stamina: getStaminaAfterConsumption(p1, p2),
-  },
-  p2: {
-    hp: getHpAfterDamage(p2, p1),
-    stamina: getStaminaAfterConsumption(p2, p1),
-  },
+  p1: getPlayerStatsAfterMoves(p1, p2),
+  p2: getPlayerStatsAfterMoves(p2, p1),
 })
