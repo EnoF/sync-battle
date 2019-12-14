@@ -9,7 +9,7 @@ approvals.configure({
 describe('Calculations', () => {
   getPermutations({
     p1Hp: [10],
-    p1Move: [{ type: 'attack' }],
+    p1Move: [{ type: 'attack' }, { type: 'attack', power: 2 }],
     p1Stamina: [5],
     p2Hp: [10],
     p2Move: [{ type: 'attack' }, { type: 'attack', power: 3 }, { type: 'block' }, { type: 'dodge' }],
