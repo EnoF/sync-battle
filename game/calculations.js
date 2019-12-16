@@ -1,70 +1,73 @@
-const getHp = player => () => player.hp
-const getStamina = player => () => player.stamina
-const getMove = player => () => player.move.type
-const getPower = player => () => player.move.power || 1
-const getIdleMove = () => 'idle'
-const isAttack = getMove => getMove() === 'attack'
-const isBlock = getMove => getMove() === 'block'
-const isDodge = getMove => getMove() === 'dodge'
-const isOutOfStaminaAfterMove = (getStamina, getConsumption) => getStamina() < getConsumption()
-const isOutOfStaminaAfterBlock = (getMoveOpponent, getMoveDefender, getPower, getStamina) =>
-  isAttack(getMoveOpponent) && isBlock(getMoveDefender) && isOutOfStaminaAfterMove(getStamina, () => getPower() + 1)
-const isMoveApplicable = (getMove, getPower, getMoveOpponent, getStamina) => {
-  if (isOutOfStaminaAfterMove(getStamina, getPower)) return false
-  if (isOutOfStaminaAfterBlock(getMoveOpponent, getMove, getPower, getStamina)) return false
-  return true
+const getHp = player => player.hp
+const getStamina = player => player.stamina
+const minZero = number => {
+  if (number < 0) return 0
+  return number
 }
-const getApplicableMove = (player, opponent) => () => {
-  const getPlayerMove = getMove(player)
-  if (isMoveApplicable(getPlayerMove, getPower(player), getMove(opponent), getStamina(player))) return getPlayerMove()
-  return getIdleMove()
+const reduceStamina = damage => player => {
+  const stamina = player |> getStamina
+  return {
+    ...player,
+    stamina: stamina - damage |> minZero,
+  }
 }
-const getDamage = (getMoveAttacker, getMoveDefender) => () => {
-  if (!isAttack(getMoveAttacker)) return 0
-  if (isBlock(getMoveDefender)) return 0
-  if (isDodge(getMoveDefender)) return 0
-  return 1
+const getMove = player => player.move
+const getType = move => move.type
+const equals = expected => actual => expected === actual
+const notEquals = expected => actual => expected !== actual
+const getDamage = move => {
+  if (move |> getType |> notEquals('attack')) return 0
+  return move |> getPower
 }
-const getPoweredDamage = (getDamage, getPower) => () => getDamage() * getPower()
-const isAttackBlocked = (getMoveAttack, getMoveBlock) => {
-  if (!isAttack(getMoveAttack)) return false
-  if (!isBlock(getMoveBlock)) return false
-  return true
+const getPower = move => {
+  if (move |> getType |> equals('idle')) return 0
+  return move.power || 1
 }
-const isEitherAttackBlocked = (getMoveConsumer, getMoveDefender) =>
-  isAttackBlocked(getMoveConsumer, getMoveDefender) || isAttackBlocked(getMoveDefender, getMoveConsumer)
-const getStaminaConsumption = (consumer, defender) => () => {
-  const getMoveConsumer = getApplicableMove(consumer, defender)
-  const getMoveDefender = getApplicableMove(defender, consumer)
-  const getPowerConsumer = getPower(consumer)
-  const getPowerDefender = getPower(defender)
-  if (isEitherAttackBlocked(getMoveDefender, getMoveConsumer)) return getPowerConsumer() + getPowerDefender()
-  return getPowerConsumer()
-}
-const subTractToMinimumOfZero = (getX, getY) => {
-  const result = getX() - getY()
-  if (result < 0) return 0
-  return result
-}
-const getStaminaAfterConsumption = (player, opponent) => {
-  const getStaminaOfPlayer = getStamina(player)
-  const getPlayerStaminaConsumption = getStaminaConsumption(player, opponent)
-  if (getStaminaOfPlayer() < getPlayerStaminaConsumption()) return getStaminaOfPlayer()
-  return subTractToMinimumOfZero(getStaminaOfPlayer, getPlayerStaminaConsumption)
-}
-const getHpAfterDamage = (defender, attacker) => {
-  const getMoveDefender = getApplicableMove(defender, attacker)
-  const getMoveAttacker = getApplicableMove(attacker, defender)
-  return subTractToMinimumOfZero(
-    getHp(defender),
-    getPoweredDamage(getDamage(getMoveAttacker, getMoveDefender), getPower(attacker))
-  )
-}
-const getPlayerStatsAfterMoves = (player, opponent) => ({
-  hp: getHpAfterDamage(player, opponent),
-  stamina: getStaminaAfterConsumption(player, opponent),
+const setMoveToIdle = player => ({
+  ...player,
+  move: {
+    type: 'idle',
+  },
 })
+const reduceMoveCost = player => {
+  const stamina = player |> getStamina
+  const power = player |> getMove |> getPower
+  if (power > stamina) return player |> setMoveToIdle
+  return player |> reduceStamina(power)
+}
+const reduceBlockCost = opponent => player => {
+  const type = player |> getMove |> getType
+  if (player |> getMove |> getType |> notEquals('block')) return player
+  const stamina = player |> getStamina
+  const opponentPower = opponent |> getMove |> getDamage
+  if (stamina < opponentPower) return player |> setMoveToIdle
+  return player |> reduceStamina(opponentPower)
+}
+const reduceHp = damage => player => {
+  const hp = player |> getHp
+  return {
+    ...player,
+    hp: hp - damage |> minZero,
+  }
+}
+const inflictDamage = opponent => player => {
+  const damage = opponent |> reduceMoveCost |> reduceBlockCost(player) |> getMove |> getDamage
+  const move = player |> getMove |> getType
+  if (move === 'block' || move === 'dodge') return player
+  return player |> reduceHp(damage)
+}
+const removeMove = ({ move, ...player }) => ({
+  ...player,
+})
+const reduceBlockedAttackCost = opponent => player => {
+  if (player |> getMove |> getType |> notEquals('attack')) return player
+  if (opponent |> getMove |> getType |> notEquals('block')) return player
+  const opponentStamina = opponent |> reduceMoveCost |> getStamina
+  const damage = player |> getMove |> getDamage
+  if (damage > opponentStamina) return player
+  return player |> reduceStamina(damage)
+}
 export const calculate = ({ p1, p2 }) => ({
-  p1: getPlayerStatsAfterMoves(p1, p2),
-  p2: getPlayerStatsAfterMoves(p2, p1),
+  p1: p1 |> reduceMoveCost |> reduceBlockCost(p2) |> reduceBlockedAttackCost(p2) |> inflictDamage(p2) |> removeMove,
+  p2: p2 |> reduceMoveCost |> reduceBlockCost(p1) |> reduceBlockedAttackCost(p1) |> inflictDamage(p1) |> removeMove,
 })
