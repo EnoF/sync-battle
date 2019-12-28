@@ -23,7 +23,7 @@ describe('Battle round', () => {
         type: 'attack',
       },
     ]
-    it('should replenish some of the stamina to the players', () => {
+    it('should replenish some of the stamina to the players.js', () => {
       expect(
         round({
           p1: {
@@ -47,7 +47,7 @@ describe('Battle round', () => {
       })
     })
   })
-  describe('when one of the players hp is reduced to zero', () => {
+  describe('when one of the players.js hp is reduced to zero', () => {
     it('should stop executing any other moves')
   })
 })

@@ -1,24 +1,7 @@
 import { calculate } from './calculations'
+import { getMoves, appendMove } from './player'
+import { getP1, getP2, addStaminaToPlayers, removeMovesFromPlayers } from './players'
 
-const getMoves = player => player.moves
-const getP1 = players => players.p1
-const getP2 = players => players.p2
-const getStamina = player => player.stamina
-const appendMove = move => player => ({ ...player, move })
-const sum = x => y => x + y
-const addStamina = player => ({
-  ...player,
-  stamina: player |> getStamina |> sum(5),
-})
-const addStaminaToPlayers = players => ({
-  p1: players |> getP1 |> addStamina,
-  p2: players |> getP2 |> addStamina,
-})
-const removeMoves = ({ moves, ...player }) => ({ ...player })
-const removeMovesFromPlayers = players => ({
-  p1: players |> getP1 |> removeMoves,
-  p2: players |> getP2 |> removeMoves,
-})
 const calculateRounds = players => {
   const p1Moves = players |> getP1 |> getMoves
   const p2Moves = players |> getP2 |> getMoves

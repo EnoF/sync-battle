@@ -1,34 +1,16 @@
-const getHp = player => player.hp
-const getStamina = player => player.stamina
-const minZero = number => {
-  if (number < 0) return 0
-  return number
-}
-const reduceStamina = damage => player => {
-  const stamina = player |> getStamina
-  return {
-    ...player,
-    stamina: stamina - damage |> minZero,
-  }
-}
-const getMove = player => player.move
-const getType = move => move.type
-const equals = expected => actual => expected === actual
-const notEquals = expected => actual => expected !== actual
-const getDamage = move => {
-  if (move |> getType |> notEquals('attack')) return 0
-  return move |> getPower
-}
-const getPower = move => {
-  if (move |> getType |> equals('idle')) return 0
-  return move.power || 1
-}
-const setMoveToIdle = player => ({
-  ...player,
-  move: {
-    type: 'idle',
-  },
-})
+import {
+  getMove,
+  reduceHp,
+  getStamina,
+  getType,
+  getPower,
+  getDamage,
+  notEquals,
+  removeMove,
+  reduceStamina,
+  setMove,
+} from './player'
+const setMoveToIdle = setMove('idle')
 const reduceMoveCost = player => {
   const stamina = player |> getStamina
   const power = player |> getMove |> getPower
@@ -43,22 +25,12 @@ const reduceBlockCost = opponent => player => {
   if (stamina < opponentPower) return player |> setMoveToIdle
   return player |> reduceStamina(opponentPower)
 }
-const reduceHp = damage => player => {
-  const hp = player |> getHp
-  return {
-    ...player,
-    hp: hp - damage |> minZero,
-  }
-}
 const inflictDamage = opponent => player => {
   const damage = opponent |> reduceMoveCost |> reduceBlockCost(player) |> getMove |> getDamage
   const move = player |> getMove |> getType
   if (move === 'block' || move === 'dodge') return player
   return player |> reduceHp(damage)
 }
-const removeMove = ({ move, ...player }) => ({
-  ...player,
-})
 const reduceBlockedAttackCost = opponent => player => {
   if (player |> getMove |> getType |> notEquals('attack')) return player
   if (opponent |> getMove |> getType |> notEquals('block')) return player
