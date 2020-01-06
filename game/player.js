@@ -3,6 +3,7 @@ export const getStamina = player => player.stamina
 export const getMove = player => player.move
 export const getMoves = player => player.moves
 export const getType = move => move.type
+export const isDefeated = player => (player |> getHp) <= 0
 export const getPower = move => {
   if (move |> getType |> equals('idle')) return 0
   return move.power || 1
