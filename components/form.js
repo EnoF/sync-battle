@@ -1,11 +1,12 @@
 import { Mutation } from 'react-apollo'
 import Router from 'next/router'
 
+const getNumber = value => parseFloat(value) || value
 const onSubmit = ({ action, mutate }) => event => {
   const data = new FormData(event.target)
   const variables = {}
   for (let [key, value] of data.entries()) {
-    variables[key] = value
+    variables[key] = value |> getNumber
   }
   mutate({ variables })
   Router.push(action)
