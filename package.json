@@ -1,9 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "build": "next build",
-    "dev": "next",
-    "now-build": "next build",
+    "build": "npm run build:next && next build",
+    "build:next": "npm run build:server && npm run build:game",
+    "build:server": "babel server -d next-server/server",
+    "build:game": "babel game -d next-server/game",
+    "dev": "npm run build:next && next",
+    "now-build": "npm run build:next && next build",
     "test": "mocha -r @babel/register game/**/*.specs.js"
   },
   "dependencies": {
@@ -20,8 +23,10 @@
     "react-dom": "^16.12.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.7.7",
     "@babel/plugin-proposal-pipeline-operator": "^7.7.7",
+    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
     "@babel/register": "^7.7.7",
     "approvals": "^3.0.5",
     "chai": "^4.2.0",
