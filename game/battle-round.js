@@ -1,5 +1,5 @@
 import { calculate } from './calculations'
-import { getMoves, appendMove, getHp } from './player'
+import { getMoves, appendMove } from './player'
 import { getP1, getP2, addStaminaToPlayers, removeMovesFromPlayers, isGameOver } from './players'
 
 const calculateRounds = players => {
