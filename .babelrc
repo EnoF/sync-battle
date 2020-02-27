@@ -1,15 +1,4 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "targets": {
-          "node": "current"
-        }
-      }
-    ]
-  ],
-  "plugins": [
-    ["@babel/proposal-pipeline-operator", { "proposal": "fsharp" }]
-  ],
+  "presets": [["next/babel"]],
+  "plugins": [["@babel/proposal-pipeline-operator", { "proposal": "fsharp" }]]
 }
