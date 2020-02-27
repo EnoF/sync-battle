@@ -18,6 +18,22 @@ const typeDefs = gql`
     stamina: Int
     moves: [Move]
   }
+  
+  input PlayersInput {
+    p1: PlayerInput
+    p2: PlayerInput
+  }
+  
+  input MoveInput {
+    type: String
+    power: Int
+  }
+  
+  input PlayerInput {
+    hp: Int
+    stamina: Int
+    moves: [MoveInput]
+  }
 
   type Query {
     hello: String
@@ -25,7 +41,7 @@ const typeDefs = gql`
 
   type Mutation {
     login(userName: String, password: String): String
-    calculate(players: Players): Players
+    calculate(players: PlayersInput): Players
   }
 `
 
