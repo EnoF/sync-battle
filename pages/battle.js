@@ -5,6 +5,7 @@ import Header from '../components/header'
 import Form from '../components/form'
 import { getHp, getStamina } from '../game/player'
 import { getP1, getP2 } from '../game/players'
+import material from 'materialize-css/sass/materialize.scss'
 
 export const CALCULATE_ROUND = gql`
   mutation NewRound(
@@ -68,21 +69,35 @@ const getP2Hp = data => data |> getP2Data |> getHp
 const getP2Stamina = data => data |> getP2Data |> getStamina
 const Moves = ({ player, loading }) => (
   <>
+    <style jsx>{`
+      .move {
+        display: block;
+      }
+      .move:invalid + .move {
+        display: none;
+      }
+      .move option:checked:not([value='attack']) ~ .move {
+        display: block;
+      }
+    `}</style>
     {[1, 2, 3, 4, 5].map(index => (
-      <label key={index}>
-        move {index}:
-        <select
-          className="browser-default"
-          type="text"
-          name={`${player}Move${index}`}
-          defaultValue="attack"
-          disabled={loading}
-        >
-          <option value="attack">attack</option>
-          <option value="block">block</option>
-          <option value="dodge">dodge</option>
-        </select>
-      </label>
+      <select
+        key={index}
+        className="browser-default move"
+        type="text"
+        name={`${player}Move${index}`}
+        defaultValue=""
+        disabled={loading}
+        required
+      >
+        <option value="" disabled>
+          select move
+        </option>
+        <option value="pass">pass</option>
+        <option value="attack">attack</option>
+        <option value="block">block</option>
+        <option value="dodge">dodge</option>
+      </select>
     ))}
   </>
 )
