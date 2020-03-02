@@ -103,6 +103,20 @@ const Moves = ({ player, loading }) => (
 )
 const Battle = () => (
   <main>
+    <style jsx>{`
+      fieldset {
+        border: none;
+      }
+      fieldset:invalid + fieldset {
+        display: none;
+      }
+      fieldset:not(:invalid) {
+        display: none;
+      }
+      fieldset:invalid + .confirmation {
+        display: none;
+      }
+    `}</style>
     <Header />
     <article className="container">
       <section>
@@ -116,6 +130,7 @@ const Battle = () => (
               {!!loading && <div>Calculating...</div>}
               <div className="card col s6">
                 <div className="card-content">
+                  <p>Player 1:</p>
                   <label>
                     hp:
                     <input type="number" readOnly name="p1Hp" value={data |> getP1Hp} disabled={loading} />
@@ -124,11 +139,11 @@ const Battle = () => (
                     stamina:
                     <input type="number" readOnly name="p1Stamina" value={data |> getP1Stamina} disabled={loading} />
                   </label>
-                  <Moves player="p1" loading={loading} />
                 </div>
               </div>
               <div className="card col s6">
                 <div className="card-content">
+                  <p>Player 2:</p>
                   <label>
                     hp:
                     <input type="number" readOnly name="p2Hp" value={data |> getP2Hp} disabled={loading} />
@@ -137,12 +152,28 @@ const Battle = () => (
                     stamina:
                     <input type="number" readOnly name="p2Stamina" value={data |> getP2Stamina} disabled={loading} />
                   </label>
-                  <Moves player="p2" loading={loading} />
                 </div>
               </div>
-              <div className="col s12">
-                <button type="submit" disabled={loading}>
+              <fieldset>
+                <div className="card col s6">
+                  <div className="card-content">
+                    <h3>Player 1</h3>
+                    <Moves player="p1" loading={loading} />
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <div className="card col s6">
+                  <div className="card-content">
+                    <h3>Player 2</h3>
+                    <Moves player="p2" loading={loading} />
+                  </div>
+                </div>
+              </fieldset>
+              <div className="col s12 confirmation">
+                <button className="btn waves-effect waves-light" type="submit" name="action" disabled={loading}>
                   calculate
+                  <i className="material-icons right">send</i>
                 </button>
               </div>
             </>
