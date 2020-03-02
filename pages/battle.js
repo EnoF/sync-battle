@@ -69,7 +69,7 @@ const getP2Stamina = data => data |> getP2Data |> getStamina
 const Moves = ({ player, loading }) => (
   <>
     {[1, 2, 3, 4, 5].map(index => (
-      <label>
+      <label key={index}>
         move {index}:
         <select
           className="browser-default"
