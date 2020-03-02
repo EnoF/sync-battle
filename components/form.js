@@ -10,6 +10,7 @@ const onSubmit = ({ action, mutate }) => event => {
   }
   mutate({ variables })
   Router.push(action)
+  event.target.reset()
   event.preventDefault()
 }
 

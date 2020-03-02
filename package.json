@@ -1,14 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build": "npm run build:next && next build",
-    "build:next": "npm run build:server && npm run build:game && npm run build:lib",
-    "build:server": "babel server -d next-server/server",
-    "build:lib": "babel lib -d next-server/lib",
-    "build:game": "babel game -d next-server/game",
-    "dev": "npm run build:next && next",
-    "now-build": "npm run build:next && next build",
-    "now-prebuild": "npm run build:next",
+    "build": "npm run build:server && next build",
+    "build:server": "babel lib -d next-server/lib && babel game -d next-server/game && babel server -d next-server/server",
+    "dev": "npm run build:server && next",
+    "now-build": "npm run build:server && next build",
     "test": "mocha -r @babel/register game/**/*.specs.js"
   },
   "dependencies": {

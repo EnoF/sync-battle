@@ -3,7 +3,7 @@
   "name": "sync-battle",
   "builds": [
     { "src": "package.json", "use": "@now/next" },
-    { "src": "+(server|game|lib)/*.js", "use": "@now/node" }
+    { "src": "server/babel-*.js", "use": "@now/node", "config": { "distDir": "./next-server" } }
   ],
   "routes": [
     { "src": "/graphql.*", "dest": "server/babel-index.js" },
