@@ -13,10 +13,11 @@ const onSubmit = ({ action, mutate }) => event => {
   event.preventDefault()
 }
 
-const Form = ({ mutation, children, action }) => (
+const Form = ({ mutation, children, action, ...props }) => (
   <Mutation mutation={mutation}>
     {(mutate, gqlData) => (
       <form
+        {...props}
         action={`/fallback/${action}`}
         method="POST"
         onSubmit={onSubmit({ action, mutate })}

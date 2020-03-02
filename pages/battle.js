@@ -71,7 +71,17 @@ const Moves = ({ player, loading }) => (
     {[1, 2, 3, 4, 5].map(index => (
       <label>
         move {index}:
-        <input type="text" name={`${player}Move${index}`} defaultValue="attack" disabled={loading} />
+        <select
+          className="browser-default"
+          type="text"
+          name={`${player}Move${index}`}
+          defaultValue="attack"
+          disabled={loading}
+        >
+          <option value="attack">attack</option>
+          <option value="block">block</option>
+          <option value="dodge">dodge</option>
+        </select>
       </label>
     ))}
   </>
@@ -79,40 +89,52 @@ const Moves = ({ player, loading }) => (
 const Battle = () => (
   <main>
     <Header />
-    <section>
-      <h1>Battle</h1>
-    </section>
-    <section>
-      <h1>Round</h1>
-      <Form action="/battle" mutation={CALCULATE_ROUND}>
-        {({ loading, data }) => (
-          <>
-            {!!loading && <div>Calculating...</div>}
-            <label>
-              hp:
-              <input type="number" readOnly name="p1Hp" value={data |> getP1Hp} disabled={loading} />
-            </label>
-            <label>
-              stamina:
-              <input type="number" readOnly name="p1Stamina" value={data |> getP1Stamina} disabled={loading} />
-            </label>
-            <Moves player="p1" loading={loading} />
-            <label>
-              hp:
-              <input type="number" readOnly name="p2Hp" value={data |> getP2Hp} disabled={loading} />
-            </label>
-            <label>
-              stamina:
-              <input type="number" readOnly name="p2Stamina" value={data |> getP2Stamina} disabled={loading} />
-            </label>
-            <Moves player="p2" loading={loading} />
-            <button type="submit" disabled={loading}>
-              calculate
-            </button>
-          </>
-        )}
-      </Form>
-    </section>
+    <article className="container">
+      <section>
+        <h1>Battle</h1>
+      </section>
+      <section>
+        <h1>Round</h1>
+        <Form action="/battle" mutation={CALCULATE_ROUND} className="row">
+          {({ loading, data }) => (
+            <>
+              {!!loading && <div>Calculating...</div>}
+              <div className="card col s6">
+                <div className="card-content">
+                  <label>
+                    hp:
+                    <input type="number" readOnly name="p1Hp" value={data |> getP1Hp} disabled={loading} />
+                  </label>
+                  <label>
+                    stamina:
+                    <input type="number" readOnly name="p1Stamina" value={data |> getP1Stamina} disabled={loading} />
+                  </label>
+                  <Moves player="p1" loading={loading} />
+                </div>
+              </div>
+              <div className="card col s6">
+                <div className="card-content">
+                  <label>
+                    hp:
+                    <input type="number" readOnly name="p2Hp" value={data |> getP2Hp} disabled={loading} />
+                  </label>
+                  <label>
+                    stamina:
+                    <input type="number" readOnly name="p2Stamina" value={data |> getP2Stamina} disabled={loading} />
+                  </label>
+                  <Moves player="p2" loading={loading} />
+                </div>
+              </div>
+              <div className="col s12">
+                <button type="submit" disabled={loading}>
+                  calculate
+                </button>
+              </div>
+            </>
+          )}
+        </Form>
+      </section>
+    </article>
   </main>
 )
 
