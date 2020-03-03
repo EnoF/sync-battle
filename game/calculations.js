@@ -37,7 +37,7 @@ const reduceBlockedAttackCost = opponent => player => {
   const opponentStamina = opponent |> reduceMoveCost |> getStamina
   const damage = player |> getMove |> getDamage
   if (damage > opponentStamina) return player
-  return player |> reduceStamina(damage)
+  return player |> reduceStamina(damage + 1)
 }
 export const calculate = ({ p1, p2 }) => ({
   p1: p1 |> reduceMoveCost |> reduceBlockCost(p2) |> reduceBlockedAttackCost(p2) |> inflictDamage(p2) |> removeMove,
