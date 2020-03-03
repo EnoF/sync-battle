@@ -6,6 +6,7 @@ import Form from '../components/form'
 import { getHp, getStamina } from '../game/player'
 import { getP1, getP2 } from '../game/players'
 import material from 'materialize-css/sass/materialize.scss'
+import { Fragment } from 'react'
 
 export const CALCULATE_ROUND = gql`
   mutation NewRound(
@@ -16,6 +17,11 @@ export const CALCULATE_ROUND = gql`
     $p1Move3: String
     $p1Move4: String
     $p1Move5: String
+    $p1MovePower1: Int
+    $p1MovePower2: Int
+    $p1MovePower3: Int
+    $p1MovePower4: Int
+    $p1MovePower5: Int
     $p2Hp: Int!
     $p2Stamina: Int!
     $p2Move1: String
@@ -23,18 +29,35 @@ export const CALCULATE_ROUND = gql`
     $p2Move3: String
     $p2Move4: String
     $p2Move5: String
+    $p2MovePower1: Int
+    $p2MovePower2: Int
+    $p2MovePower3: Int
+    $p2MovePower4: Int
+    $p2MovePower5: Int
   ) {
     calculate(
       players: {
         p1: {
           hp: $p1Hp
           stamina: $p1Stamina
-          moves: [{ type: $p1Move1 }, { type: $p1Move2 }, { type: $p1Move3 }, { type: $p1Move4 }, { type: $p1Move5 }]
+          moves: [
+            { type: $p1Move1, power: $p1MovePower1 }
+            { type: $p1Move2, power: $p1MovePower2 }
+            { type: $p1Move3, power: $p1MovePower3 }
+            { type: $p1Move4, power: $p1MovePower4 }
+            { type: $p1Move5, power: $p1MovePower5 }
+          ]
         }
         p2: {
           hp: $p2Hp
           stamina: $p2Stamina
-          moves: [{ type: $p2Move1 }, { type: $p2Move2 }, { type: $p2Move3 }, { type: $p2Move4 }, { type: $p2Move5 }]
+          moves: [
+            { type: $p2Move1, power: $p2MovePower1 }
+            { type: $p2Move2, power: $p2MovePower2 }
+            { type: $p2Move3, power: $p2MovePower3 }
+            { type: $p2Move4, power: $p2MovePower4 }
+            { type: $p2Move5, power: $p2MovePower5 }
+          ]
         }
       }
     ) {
@@ -73,31 +96,41 @@ const Moves = ({ player, loading }) => (
       .move {
         display: block;
       }
-      .move:invalid + .move {
+      .move:invalid ~ .move,
+      .move:invalid ~ .move-power {
         display: none;
-      }
-      .move option:checked:not([value='attack']) ~ .move {
-        display: block;
       }
     `}</style>
     {[1, 2, 3, 4, 5].map(index => (
-      <select
-        key={index}
-        className="browser-default move"
-        type="text"
-        name={`${player}Move${index}`}
-        defaultValue=""
-        disabled={loading}
-        required
-      >
-        <option value="" disabled>
-          select move
-        </option>
-        <option value="pass">pass</option>
-        <option value="attack">attack</option>
-        <option value="block">block</option>
-        <option value="dodge">dodge</option>
-      </select>
+      <Fragment key={index}>
+        <select
+          className="browser-default move col s10"
+          type="text"
+          name={`${player}Move${index}`}
+          defaultValue=""
+          disabled={loading}
+          required
+        >
+          <option value="" disabled>
+            select move
+          </option>
+          <option value="pass">pass</option>
+          <option value="attack">attack</option>
+          <option value="block">block</option>
+          <option value="dodge">dodge</option>
+        </select>
+        <select
+          name={`${player}MovePower${index}`}
+          type="text"
+          className="browser-default move-power col s2"
+          defaultValue="1"
+          disabled={loading}
+        >
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </Fragment>
     ))}
   </>
 )
@@ -158,7 +191,9 @@ const Battle = () => (
                 <div className="card col s12 m6">
                   <div className="card-content">
                     <h3>Player 1</h3>
-                    <Moves player="p1" loading={loading} />
+                    <div className="row">
+                      <Moves player="p1" loading={loading} />
+                    </div>
                   </div>
                 </div>
               </fieldset>
@@ -166,7 +201,9 @@ const Battle = () => (
                 <div className="card col s12 m6">
                   <div className="card-content">
                     <h3>Player 2</h3>
-                    <Moves player="p2" loading={loading} />
+                    <div className="row">
+                      <Moves player="p2" loading={loading} />
+                    </div>
                   </div>
                 </div>
               </fieldset>
