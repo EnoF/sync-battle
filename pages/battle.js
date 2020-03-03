@@ -155,7 +155,7 @@ const Battle = () => (
                 </div>
               </div>
               <fieldset>
-                <div className="card col s6">
+                <div className="card col s12 m6">
                   <div className="card-content">
                     <h3>Player 1</h3>
                     <Moves player="p1" loading={loading} />
@@ -163,7 +163,7 @@ const Battle = () => (
                 </div>
               </fieldset>
               <fieldset>
-                <div className="card col s6">
+                <div className="card col s12 m6">
                   <div className="card-content">
                     <h3>Player 2</h3>
                     <Moves player="p2" loading={loading} />
