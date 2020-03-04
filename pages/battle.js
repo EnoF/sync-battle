@@ -140,13 +140,14 @@ const Battle = () => (
       fieldset {
         border: none;
       }
-      fieldset:invalid + fieldset {
-        display: none;
-      }
-      fieldset:not(:invalid) {
-        display: none;
-      }
       fieldset:invalid + .confirmation {
+        display: none;
+      }
+      #player-1-submit:checked ~ .player-1-moves,
+      #player-1-submit:checked ~ .player-1-submit-button {
+        display: none;
+      }
+      #player-1-submit:not(:checked) ~ .player-2-moves {
         display: none;
       }
     `}</style>
@@ -161,6 +162,7 @@ const Battle = () => (
           {({ loading, data }) => (
             <>
               {!!loading && <div>Calculating...</div>}
+              <input type="radio" value="" id="player-1-submit" />
               <div className="card col s6">
                 <div className="card-content">
                   <p>Player 1:</p>
@@ -187,7 +189,7 @@ const Battle = () => (
                   </label>
                 </div>
               </div>
-              <fieldset>
+              <fieldset className="player-1-moves">
                 <div className="card col s12 m6">
                   <div className="card-content">
                     <h3>Player 1</h3>
@@ -197,7 +199,8 @@ const Battle = () => (
                   </div>
                 </div>
               </fieldset>
-              <fieldset>
+              <label htmlFor="player-1-submit" className="btn confirmation player-1-submit-button">submit</label>
+              <fieldset className="player-2-moves">
                 <div className="card col s12 m6">
                   <div className="card-content">
                     <h3>Player 2</h3>
