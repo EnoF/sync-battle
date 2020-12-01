@@ -3,14 +3,13 @@
   "name": "sync-battle",
   "builds": [
     { "src": "package.json", "use": "@now/next" },
-    { "src": "server/index.js", "use": "@now/node" },
-    { "src": "server/fallback.js", "use": "@now/node@canary" }
+    { "src": "server/babel-*.js", "use": "@now/node", "config": { "distDir": "./next-server" } }
   ],
   "routes": [
-    { "src": "/graphql.*", "dest": "server/index.js" },
+    { "src": "/graphql.*", "dest": "server/babel-index.js" },
     {
       "src": "/fallback/(.*)",
-      "dest": "server/fallback.js?fallbackUrl=$1"
+      "dest": "server/babel-fallback.js?fallbackUrl=$1"
     }
   ]
 }

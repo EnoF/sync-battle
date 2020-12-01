@@ -1,2 +1,11 @@
+.idea
+.env
 node_modules
 .next
+.nyc_output
+
+*.received.*
+.npmrc
+next-server
+
+.now
